@@ -25,7 +25,7 @@
 const BASE_URL = 'https://pixabay.com/api';
 const API_KEY = '28442536-1443146eb90a3a0b59e7fe2e3';
 
-function fetchImages(name, page) {
+function fetchImages(query, page) {
   const searchParams = new URLSearchParams({
     key: API_KEY,
     q: query,
@@ -42,7 +42,7 @@ function fetchImages(name, page) {
     }
 
     return Promise.reject(
-      new Error(`There is no image on your request '${name}'`)
+      new Error(`There is no image on your request '${query}'`)
     );
   });
 }

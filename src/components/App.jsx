@@ -2,7 +2,7 @@ import { Component } from 'react';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
-import imagesApi from '../api/api-service';
+import api from '../api/api-service';
 
 export class App extends Component {
   state = {
@@ -20,7 +20,25 @@ export class App extends Component {
     const nextQuery = this.state.searchQuery;
     const { page } = this.state;
 
-    imagesApi.fetchImages();
+    if (prevQuery !== nextQuery || prevPage !== nextPage) {
+      this.setState({ status: 'pending' });
+      // fetchImages(nextQuery, nextPage);
+    }
+
+    if (prevName !== nextName || prevState.page !== page) {
+      this.setState({ status: 'pending' });
+      galeryAPI
+        .fetchGalery(nextName, page)
+        .then(imagesHits =>
+          this.setState(state => ({
+            imagesHits: [...state.imagesHits, ...imagesHits.hits],
+            status: 'resolved',
+          }))
+        )
+        .catch(error => this.setState({ error, status: 'rejected' }));
+    }
+
+    api.fetchImages();
   }
 
   handleFormSubmit = searchQuery => {

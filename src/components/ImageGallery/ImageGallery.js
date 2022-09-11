@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Button } from 'components/Button/Button';
-import { fetchImages } from '../../api/api-service';
+// import { fetchImages } from '../../api/api-service';
 
 export class ImageGallery extends Component {
   state = {
@@ -22,7 +22,7 @@ export class ImageGallery extends Component {
 
     if (prevQuery !== nextQuery || prevPage !== nextPage) {
       this.setState({ status: 'pending' });
-      fetchImages(nextQuery, nextPage);
+      // fetchImages(nextQuery, nextPage);
     }
   }
 
