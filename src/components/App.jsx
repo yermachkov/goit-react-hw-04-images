@@ -2,17 +2,26 @@ import { Component } from 'react';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import imagesApi from '../api/api-service';
 
 export class App extends Component {
   state = {
-    selectedImage: '',
     searchQuery: '',
+    images: [],
     page: 1,
+    error: null,
+    status: 'idle',
+    showModal: false,
+    selectedImage: null,
   };
 
-  componentDidMount() {}
+  componentDidUpdate(prevProps, prevState) {
+    const prevQuery = prevState.searchQuery;
+    const nextQuery = this.state.searchQuery;
+    const { page } = this.state;
 
-  componentDidUpdate(prevProps, prevState) {}
+    imagesApi.fetchImages();
+  }
 
   handleFormSubmit = searchQuery => {
     this.setState({ searchQuery });

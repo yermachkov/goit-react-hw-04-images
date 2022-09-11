@@ -4,9 +4,7 @@ import axios from 'axios';
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 import { Loader } from 'components/Loader/Loader';
 import { Button } from 'components/Button/Button';
-
-const BASE_URL = 'https://pixabay.com/api';
-const API_KEY = '28442536-1443146eb90a3a0b59e7fe2e3';
+import { fetchImages } from '../../api/api-service';
 
 export class ImageGallery extends Component {
   state = {
@@ -24,29 +22,7 @@ export class ImageGallery extends Component {
 
     if (prevQuery !== nextQuery || prevPage !== nextPage) {
       this.setState({ status: 'pending' });
-
-      axios.defaults.baseURL = BASE_URL;
-      const searchParams = new URLSearchParams({
-        key: API_KEY,
-        q: nextQuery,
-        image_type: 'photo',
-        orientation: 'horizontal',
-        safesearch: true,
-        page: this.state.page,
-        per_page: 12,
-      });
-
-      axios
-        .get(`/?${searchParams}`)
-        .then(response => {
-          this.setState({ status: 'resolved' });
-          this.setState(prevState => ({
-            images: [...prevState.images, ...response.data.hits],
-          }));
-        })
-        .catch(error => {
-          this.setState({ error, status: 'resolved' });
-        });
+      fetchImages(nextQuery, nextPage);
     }
   }
 
