@@ -1,3 +1,11 @@
-export const ImageGalleryItem = ({ imgSrc }) => {
-  return <img src={imgSrc} alt="" className="ImageGalleryItem-image" />;
+export const ImageGalleryItem = ({ item, onSelect }) => {
+  const { webformatURL, tags, largeImageURL } = item;
+  return (
+    <img
+      src={webformatURL}
+      alt={tags}
+      onClick={() => onSelect(largeImageURL)}
+      className="ImageGalleryItem-image"
+    />
+  );
 };

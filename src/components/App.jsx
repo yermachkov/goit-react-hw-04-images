@@ -2,6 +2,10 @@ import { Component } from 'react';
 
 import { Searchbar } from './Searchbar/Searchbar';
 import { ImageGallery } from './ImageGallery/ImageGallery';
+import { Button } from './Button/Button';
+import { Loader } from './Loader/Loader';
+import { Modal } from './Modal/Modal';
+
 import api from '../api/api-service';
 
 export class App extends Component {
@@ -18,47 +22,63 @@ export class App extends Component {
   componentDidUpdate(prevProps, prevState) {
     const prevQuery = prevState.searchQuery;
     const nextQuery = this.state.searchQuery;
-    const { page } = this.state;
+    const prevPage = prevState.page;
+    const nextPage = this.state.page;
 
     if (prevQuery !== nextQuery || prevPage !== nextPage) {
       this.setState({ status: 'pending' });
-      // fetchImages(nextQuery, nextPage);
-    }
 
-    if (prevName !== nextName || prevState.page !== page) {
-      this.setState({ status: 'pending' });
-      galeryAPI
-        .fetchGalery(nextName, page)
-        .then(imagesHits =>
-          this.setState(state => ({
-            imagesHits: [...state.imagesHits, ...imagesHits.hits],
+      api
+        .fetchImages(nextQuery, nextPage)
+        .then(response =>
+          this.setState(prevState => ({
             status: 'resolved',
+            images: [...prevState.images, ...response.hits],
           }))
         )
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
-
-    api.fetchImages();
   }
 
   handleFormSubmit = searchQuery => {
-    this.setState({ searchQuery });
+    this.setState({
+      searchQuery,
+      page: 1,
+      images: [],
+    });
+  };
+
+  handleLoadMore = () => {
+    this.setState(prevState => {
+      return { page: prevState.page + 1 };
+    });
+  };
+
+  toggleModal = async largeImg => {
+    await this.setState({ selectedImg: largeImg });
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
   };
 
   render() {
-    return (
-      <div className="App">
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery searchQuery={this.state.searchQuery} />
+    const { images, error, status, showModal, selectedImage } = this.state;
 
-        {/* {showModal && <Modal src="" />} */}
-      </div>
+    return (
+      <main className="App">
+        <Searchbar onSubmit={this.handleFormSubmit} />
+        <ImageGallery images={images} toggleModal={this.toggleModal} />
+        {images.length > 0 && status !== 'pending' && (
+          <Button onLoadMore={this.handleLoadMore}>Load more</Button>
+        )}
+        {status === 'pending' && <Loader />}
+        {status === 'rejected' && <p>{error.message}</p>}
+        {showModal && (
+          <Modal onClose={this.toggleModal}>
+            <img src={selectedImage} alt="" />
+          </Modal>
+        )}
+      </main>
     );
   }
 }
-
-// toggleModal = () => {
-//   this.setState(({ showModal }) => ({
-//     showModal: !showModal,
-//   }));
-// };
