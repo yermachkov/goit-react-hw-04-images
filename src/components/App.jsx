@@ -16,7 +16,7 @@ export class App extends Component {
     error: null,
     status: 'idle',
     showModal: false,
-    selectedImage: null,
+    selectedImg: null,
   };
 
   componentDidUpdate(prevProps, prevState) {
@@ -62,7 +62,7 @@ export class App extends Component {
   };
 
   render() {
-    const { images, error, status, showModal, selectedImage } = this.state;
+    const { images, error, status, showModal, selectedImg } = this.state;
 
     return (
       <main className="App">
@@ -75,7 +75,7 @@ export class App extends Component {
         {status === 'rejected' && <p>{error.message}</p>}
         {showModal && (
           <Modal onClose={this.toggleModal}>
-            <img src={selectedImage} alt="" />
+            <img src={selectedImg} alt="" />
           </Modal>
         )}
       </main>
