@@ -30,12 +30,18 @@ export class App extends Component {
 
       api
         .fetchImages(nextQuery, nextPage)
-        .then(response =>
+        .then(response => {
+          const specifiedResponse = response.hits.map(
+            ({ id, largeImageURL, webformatURL, tags }) => {
+              return { id, largeImageURL, webformatURL, tags };
+            }
+          );
+
           this.setState(prevState => ({
+            images: [...prevState.images, ...specifiedResponse],
             status: 'resolved',
-            images: [...prevState.images, ...response.hits],
-          }))
-        )
+          }));
+        })
         .catch(error => this.setState({ error, status: 'rejected' }));
     }
   }

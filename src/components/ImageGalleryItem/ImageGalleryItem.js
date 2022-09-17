@@ -1,3 +1,5 @@
+import PropTypes from 'prop-types';
+
 export const ImageGalleryItem = ({ item, onSelect }) => {
   const { webformatURL, tags, largeImageURL } = item;
   return (
@@ -8,4 +10,9 @@ export const ImageGalleryItem = ({ item, onSelect }) => {
       className="ImageGalleryItem-image"
     />
   );
+};
+
+ImageGalleryItem.propTypes = {
+  item: PropTypes.object.isRequired,
+  onSelect: PropTypes.func.isRequired,
 };
