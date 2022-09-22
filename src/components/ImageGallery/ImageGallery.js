@@ -2,13 +2,13 @@ import PropTypes from 'prop-types';
 
 import { ImageGalleryItem } from 'components/ImageGalleryItem/ImageGalleryItem';
 
-export const ImageGallery = ({ images, toggleModal }) => {
+export const ImageGallery = ({ images }) => {
   if (images.length > 0) {
     return (
       <ul className="ImageGallery">
         {images.map(image => (
           <li key={image.id} className="ImageGalleryItem">
-            <ImageGalleryItem item={image} onSelect={toggleModal} />
+            <ImageGalleryItem item={image} />
           </li>
         ))}
       </ul>
@@ -24,5 +24,4 @@ ImageGallery.propTypes = {
       webformatURL: PropTypes.string.isRequired,
     })
   ),
-  toggleModal: PropTypes.func.isRequired,
 };

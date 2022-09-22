@@ -1,7 +1,9 @@
-const BASE_URL = 'https://pixabay.com/api';
+import axios from 'axios';
+
+axios.defaults.baseURL = 'https://pixabay.com/api';
 const API_KEY = '28442536-1443146eb90a3a0b59e7fe2e3';
 
-function fetchImages(query, page) {
+export const getImages = async (query, page) => {
   const searchParams = new URLSearchParams({
     key: API_KEY,
     q: query,
@@ -12,19 +14,13 @@ function fetchImages(query, page) {
     per_page: 12,
   });
 
-  return fetch(`${BASE_URL}/?${searchParams}`).then(response => {
-    if (response.ok) {
-      return response.json();
-    }
-
-    return Promise.reject(
-      new Error(`There is no image on your request '${query}'`)
-    );
-  });
-}
-
-const api = {
-  fetchImages,
+  const response = await axios.get(`/?${searchParams}`);
+  return response.data.hits.map(
+    ({ id, largeImageURL, webformatURL, tags }) => ({
+      id,
+      largeImageURL,
+      webformatURL,
+      tags,
+    })
+  );
 };
-
-export default api;
